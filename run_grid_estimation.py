@@ -115,7 +115,7 @@ def parallel_quantile_est(
 if __name__ == "__main__":
 
     # define the grid
-    NUM_GRID = 10
+    NUM_GRID = 4
     GRID_LB = 0
     GRID_UB = 3
     x_1_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
@@ -174,13 +174,13 @@ if __name__ == "__main__":
     )
 
     # save the above data
-    if os.path.exits('./data'):
+    if os.path.exists('./data'):
         SAVE_PATH = './data/%s' % OUTPUT_FILE_NM
     else:
         SAVE_PATH = './%s' % OUTPUT_FILE_NM
 
     np.savez(
-        file='./data/%s' % OUTPUT_FILE_NM,
+        file=SAVE_PATH,
         exp_params_txt=exp_params_txt,
         quantile_ests=quantile_ests,
         sampled_datas=sampled_datas,
