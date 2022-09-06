@@ -56,11 +56,16 @@ def parallel_quantile_est(grid_flat, h, noise_distr, num_samp, q, c_max, tol):
     Given the flattened list of parameters over which to simulate, parallelize
     the estimate_quantile_at_point function.
 
+    Dimensions:
+        g : number of grid cells in each dimension
+        d : parameter dimension (2)
+        n : number of samples in each quantile estimation
+
     Parameters:
-        grid_flat   (np arr)      : each row is 2d parameter combination
-        h           (np arr)      : functional of interest
+        grid_flat   (np arr)      : 2d parameter combos (g**2, d)
+        h           (np arr)      : functional of interest (d)
         noise_distr (scipy distr) : multivariate error distribution
-        num_samp    (int)         : number of data samples
+        num_samp    (int)         : number of data samples (n)
         q           (float)       : quantile (0, 1)
         c_max       (float)       : maximum considered quantile
         tol         (float)       : search stopping criterion
@@ -94,9 +99,9 @@ def parallel_quantile_est(grid_flat, h, noise_distr, num_samp, q, c_max, tol):
     pool.join()
 
     output_data.sort(key=lambda x: x[0])
-    quantile_ests = np.array([_[1] for _ in output_data])
-    sampled_datas = np.array([_[2] for _ in output_data])
-    llrs = np.array([_[3] for _ in output_data])
+    quantile_ests = np.array([_[1] for _ in output_data])  # (g**2,)
+    sampled_datas = np.array([_[2] for _ in output_data])  # (g**2, n, d)
+    llrs = np.array([_[3] for _ in output_data])           # (g**2, n)
 
     return quantile_ests, sampled_datas, llrs
 

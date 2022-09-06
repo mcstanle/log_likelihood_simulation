@@ -152,8 +152,8 @@ def estimate_quantile_at_point(
     quantile_est = quantile_binary_search(
         q=q,
         cdf_func=cdf_approx,
-        c_max=20,
-        tol=1e-4
+        c_max=c_max,
+        tol=tol
     )
 
     return quantile_est, sampled_data, llrs

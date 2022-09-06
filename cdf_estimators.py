@@ -55,7 +55,7 @@ def cdf_est_linear_interp(sampled_data):
     # find the midpoints
     md_pts = 0.5 * (ordered_data_1zero[:-1] + ordered_data_1zero[1:])
 
-    # made a new set of values to interpolate
+    # make a new set of values to interpolate
     # first data point is the true smallest
     # last data point is the true largest
     interp_xs = np.zeros(len(ordered_data_1zero) + 1)
