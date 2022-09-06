@@ -115,7 +115,7 @@ def parallel_quantile_est(
 if __name__ == "__main__":
 
     # define the grid
-    NUM_GRID = 4
+    NUM_GRID = 20
     GRID_LB = 0
     GRID_UB = 3
     x_1_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
@@ -135,12 +135,12 @@ if __name__ == "__main__":
         mean=np.zeros(2),
         cov=np.identity(2)
     )
-    NUM_SAMP = 1000
+    NUM_SAMP = 10000
     Q = 0.67
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = 8
-    OUTPUT_FILE_NM = 'exp0.npz'
+    OUTPUT_FILE_NM = 'exp1.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
