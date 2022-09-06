@@ -181,6 +181,7 @@ if __name__ == "__main__":
 
     np.savez(
         file=SAVE_PATH,
+        grid_flat=grid_flat,
         exp_params_txt=exp_params_txt,
         quantile_ests=quantile_ests,
         sampled_datas=sampled_datas,
