@@ -51,7 +51,9 @@ def i_estimate_quantile_at_point(
     return i, quantile_est, sampled_data, llrs
 
 
-def parallel_quantile_est(grid_flat, h, noise_distr, num_samp, q, c_max, tol):
+def parallel_quantile_est(
+    grid_flat, h, noise_distr, num_samp, q, c_max, tol, num_cpu=None
+):
     """
     Given the flattened list of parameters over which to simulate, parallelize
     the estimate_quantile_at_point function.
@@ -69,13 +71,17 @@ def parallel_quantile_est(grid_flat, h, noise_distr, num_samp, q, c_max, tol):
         q           (float)       : quantile (0, 1)
         c_max       (float)       : maximum considered quantile
         tol         (float)       : search stopping criterion
+        num_cpu     (int)         : number of CPUs over which to parallelize
 
     Returns:
         quantile_ests (np arr) : estimated quantiles for each grid point
         sampled_datas (np arr) : all sampled data for each grid point est
         llrs          (np arr) : log-lr for each data draw
     """
-    pool = mp.Pool(mp.cpu_count())
+    if num_cpu:
+        pool = mp.Pool(num_cpu)
+    else:
+        pool = mp.Pool(mp.cpu_count())
 
     print('Number of available CPUs: %i' % mp.cpu_count())
 
@@ -133,6 +139,7 @@ if __name__ == "__main__":
     Q = 0.67
     C_MAX = 20
     TOL = 1e-4
+    NUM_CPU = 8
     OUTPUT_FILE_NM = 'exp0.npz'
 
     # constract text file with experiment parameters
@@ -140,9 +147,13 @@ if __name__ == "__main__":
     exp_params_txt += "GRID_LB = %i | GRID_UB = %i\n" % (GRID_LB, GRID_UB)
     exp_params_txt += "h = %s\n" % str(h)
     exp_params_txt += "NUM_SAMP = %i\n" % NUM_SAMP
-    exp_params_txt += "q = %.2f | c_max = %.2f | tol = %s" % (
+    exp_params_txt += "q = %.2f | c_max = %.2f | tol = %s\n" % (
         Q, C_MAX, str(TOL)
     )
+    if NUM_CPU:
+        exp_params_txt += "NUM_CPU = %i" % NUM_CPU
+    else:
+        exp_params_txt += "NUM_CPU = %i" % mp.cpu_count()
 
     # estimate quantiles
     START = time()
@@ -153,7 +164,8 @@ if __name__ == "__main__":
         num_samp=NUM_SAMP,
         q=Q,
         c_max=C_MAX,
-        tol=TOL
+        tol=TOL,
+        num_cpu=NUM_CPU
     )
     END = time()
 
