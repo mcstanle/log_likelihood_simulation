@@ -127,7 +127,7 @@ if __name__ == "__main__":
         for j in range(NUM_GRID):
             grid_flat[count, :] = [x_1_grid[i], x_2_grid[j]]
 
-        count += 1
+            count += 1
 
     # define the parameters for the simulations
     h = np.array([0.5, 0.5])
