@@ -5,7 +5,7 @@ Parallelizable.
 
 Author   : Mike Stanley
 Created  : Sept 6 2022
-Last Mod : Sept 6 2022
+Last Mod : Sept 7 2022
 """
 import multiprocessing as mp
 import numpy as np
@@ -130,7 +130,7 @@ if __name__ == "__main__":
             count += 1
 
     # define the parameters for the simulations
-    h = np.array([0.25, 0.75])
+    h = np.array([1, -1])
     noise_distr = stats.multivariate_normal(
         mean=np.zeros(2),
         cov=np.identity(2)
@@ -140,7 +140,7 @@ if __name__ == "__main__":
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = 8
-    OUTPUT_FILE_NM = 'exp2.npz'
+    OUTPUT_FILE_NM = 'exp3.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
