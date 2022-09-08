@@ -3,9 +3,12 @@ Estimates quantiles on a defined grid of points.
 
 Parallelizable.
 
+NOTE: bisecting mode is when true parameter values are only taken on the y=x
+line. This setup matches the Tenorio (2008) example.
+
 Author   : Mike Stanley
 Created  : Sept 6 2022
-Last Mod : Sept 7 2022
+Last Mod : Sept 8 2022
 """
 import multiprocessing as mp
 import numpy as np
@@ -114,6 +117,9 @@ def parallel_quantile_est(
 
 if __name__ == "__main__":
 
+    # bisecting mode -- see above for description
+    BISECTING_MODE = True
+
     # define the grid
     NUM_GRID = 20
     GRID_LB = 0
@@ -121,13 +127,18 @@ if __name__ == "__main__":
     x_1_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
     x_2_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
 
-    count = 0
-    grid_flat = np.zeros(shape=(NUM_GRID ** 2, 2))
-    for i in range(NUM_GRID):
-        for j in range(NUM_GRID):
-            grid_flat[count, :] = [x_1_grid[i], x_2_grid[j]]
+    if BISECTING_MODE:
+        grid_flat = np.zeros(shape=(NUM_GRID, 2))
+        for i in range(NUM_GRID):
+            grid_flat[i, :] = [x_1_grid[i], x_1_grid[i]]
+    else:
+        count = 0
+        grid_flat = np.zeros(shape=(NUM_GRID ** 2, 2))
+        for i in range(NUM_GRID):
+            for j in range(NUM_GRID):
+                grid_flat[count, :] = [x_1_grid[i], x_2_grid[j]]
 
-            count += 1
+                count += 1
 
     # define the parameters for the simulations
     h = np.array([1, -1])
@@ -140,7 +151,7 @@ if __name__ == "__main__":
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = 8
-    OUTPUT_FILE_NM = 'exp3.npz'
+    OUTPUT_FILE_NM = 'exp4.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
@@ -150,6 +161,7 @@ if __name__ == "__main__":
     exp_params_txt += "q = %.2f | c_max = %.2f | tol = %s\n" % (
         Q, C_MAX, str(TOL)
     )
+    exp_params_txt += "BISECTING_MODE = %s" % str(BISECTING_MODE)
     if NUM_CPU:
         exp_params_txt += "NUM_CPU = %i" % NUM_CPU
     else:
