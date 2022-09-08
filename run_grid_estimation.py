@@ -118,12 +118,12 @@ def parallel_quantile_est(
 if __name__ == "__main__":
 
     # bisecting mode -- see above for description
-    BISECTING_MODE = True
+    BISECTING_MODE = False
 
     # define the grid
-    NUM_GRID = 20
+    NUM_GRID = 30
     GRID_LB = 0
-    GRID_UB = 3
+    GRID_UB = 10
     x_1_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
     x_2_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
 
@@ -141,7 +141,7 @@ if __name__ == "__main__":
                 count += 1
 
     # define the parameters for the simulations
-    h = np.array([1, -1])
+    h = np.array([0.5, 0.5])
     noise_distr = stats.multivariate_normal(
         mean=np.zeros(2),
         cov=np.identity(2)
@@ -150,8 +150,8 @@ if __name__ == "__main__":
     Q = 0.67
     C_MAX = 20
     TOL = 1e-4
-    NUM_CPU = 8
-    OUTPUT_FILE_NM = 'exp4.npz'
+    NUM_CPU = None
+    OUTPUT_FILE_NM = 'exp5.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
