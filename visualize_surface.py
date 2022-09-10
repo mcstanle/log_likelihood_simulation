@@ -5,7 +5,7 @@ NOTE: assumes the [0,3] with 20 elements grid.
 
 Author   : Mike Stanley
 Created  : Sept 8 2022
-Last Mod : Sept 8 2022
+Last Mod : Sept 9 2022
 """
 from matplotlib import cm
 import matplotlib.pyplot as plt
@@ -13,19 +13,19 @@ import numpy as np
 from scipy import stats
 
 
-def plot_quantile_surface(data, prob):
+def plot_quantile_surface(data, prob, grid_size, grid_ub):
     """
     Quantile Surface. Surface should be BELOW presecribed quantile.
     """
     # reshape the quantile estimates
     quant_est_exp = np.reshape(
-        a=data['quantile_ests'], newshape=(20, 20), order='C'
+        a=data['quantile_ests'], newshape=(grid_size, grid_size), order='C'
     )
 
     # plot surface
     fig, ax = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(10, 10))
 
-    x_grid = np.linspace(0, 3, num=20)
+    x_grid = np.linspace(0, grid_ub, num=grid_size)
     X, Y = np.meshgrid(x_grid, x_grid)
 
     # plot the sampled quantile surface
@@ -53,7 +53,7 @@ def plot_quantile_surface(data, prob):
     plt.show()
 
 
-def plot_probability_surface(data, prob):
+def plot_probability_surface(data, prob, grid_size, grid_ub):
     """
     Probability surface. Surface should be ABOVE prescribed probability.
     """
@@ -64,13 +64,13 @@ def plot_probability_surface(data, prob):
 
     # reshape the probability estimates
     est_probs_exp1 = np.reshape(
-        a=est_probs_flat_exp1, newshape=(20, 20), order='C'
+        a=est_probs_flat_exp1, newshape=(grid_size, grid_size), order='C'
     )
 
     # plot surface
     fig, ax = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(10, 10))
 
-    x_grid = np.linspace(0, 3, num=20)
+    x_grid = np.linspace(0, grid_ub, num=grid_size)
     X, Y = np.meshgrid(x_grid, x_grid)
 
     # plot the plane for the chi-squared quantile
@@ -100,15 +100,21 @@ def plot_probability_surface(data, prob):
 if __name__ == "__main__":
 
     # read in data
-    DATA_PATH = './data/exp1.npz'
+    DATA_PATH = './data/exp3.npz'
     data = np.load(DATA_PATH)
 
     # plot the experiment settings
     print(data['exp_params_txt'])
 
     # plotting parameters
-    PROB = 0.95
+    PROB = 0.67
+    GRID_SIZE = 20
+    GRID_UB = 3
 
     # plot data
-    # plot_quantile_surface(data=data, prob=PROB)
-    plot_probability_surface(data=data, prob=PROB)
+    # plot_quantile_surface(
+    #     data=data, prob=PROB, grid_size=GRID_SIZE, grid_ub=GRID_UB
+    # )
+    plot_probability_surface(
+        data=data, prob=PROB, grid_size=GRID_SIZE, grid_ub=GRID_UB
+    )

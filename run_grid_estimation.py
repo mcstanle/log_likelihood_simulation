@@ -161,7 +161,7 @@ if __name__ == "__main__":
     exp_params_txt += "q = %.2f | c_max = %.2f | tol = %s\n" % (
         Q, C_MAX, str(TOL)
     )
-    exp_params_txt += "BISECTING_MODE = %s" % str(BISECTING_MODE)
+    exp_params_txt += "BISECTING_MODE = %s\n" % str(BISECTING_MODE)
     if NUM_CPU:
         exp_params_txt += "NUM_CPU = %i" % NUM_CPU
     else:
