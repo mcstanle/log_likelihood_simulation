@@ -96,7 +96,7 @@ def estimate_quantile_at_point(
     # compute llrs
     llrs = np.zeros(num_samp)
     for i in range(num_samp):
-        llrs[i] = llr(y=sampled_data[i], x_true=x_true)
+        llrs[i] = llr.compute(y=sampled_data[i], x_true=x_true)
 
     # define an approx CDF from the above sampled data
     cdf_approx, interp_xs = cdf_est_linear_interp(llrs)

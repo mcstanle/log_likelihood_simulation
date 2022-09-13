@@ -100,7 +100,7 @@ def plot_probability_surface(data, prob, grid_size, grid_ub):
 if __name__ == "__main__":
 
     # read in data
-    DATA_PATH = './data/exp4.npz'
+    DATA_PATH = './data/exp1_analytical.npz'
     data = np.load(DATA_PATH)
 
     # plot the experiment settings
@@ -108,8 +108,8 @@ if __name__ == "__main__":
 
     # plotting parameters
     PROB = 0.67
-    GRID_SIZE = 20
-    GRID_UB = 3
+    GRID_SIZE = 30
+    GRID_UB = 10
 
     # plot data
     # plot_quantile_surface(
