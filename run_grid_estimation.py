@@ -129,7 +129,7 @@ if __name__ == "__main__":
     h = np.array([0.5, 0.5])
     if ANALYTICAL_SOLVER:
         llr = exp1_llr()
-        assert np.array_equiv(exp1_llr.h, h)
+        assert np.array_equiv(llr.h, h)
         print('Using analytical solver for h = %s' % str(h))
     else:
         llr = num_llr(h=h)
