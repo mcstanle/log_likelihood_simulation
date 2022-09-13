@@ -13,6 +13,7 @@ Last Mod : Sept 13 2022
 from cdf_estimators import cdf_est_linear_interp, interp_function_wrap
 from functools import partial
 import numpy as np
+from scipy import stats
 
 
 def quant_est_coarse(sampled_values, q):
@@ -69,17 +70,16 @@ def quantile_binary_search(q, cdf_func, c_max=20, tol=1e-4):
 
 
 def estimate_quantile_at_point(
-    x_true, llr, noise_distr, num_samp, q, c_max, tol
+    x_true, llr, num_samp, q, c_max, tol
 ):
     """
     Takes a true parameter value and estimates q-quantile.
 
-    NOTE: the noise distribution needs to be defined outside.
+    NOTE: noise distribution is assumed to be standard Gaussian.
 
     Parameters:
         x_true      (np arr)      : true parameter value
         llr         (opt_llr obj) : llr object (see llr_solvers.py)
-        noise_distr (scipy distr) : multivariate error distribution
         num_samp    (int)         : number of data samples
         q           (float)       : quantile (0, 1)
         c_max       (float)       : maximum considered quantile
@@ -90,8 +90,11 @@ def estimate_quantile_at_point(
         sampled_data (np arr) : truth + noise
         llrs         (np arr) : log-likelihood ratios for each data draw
     """
-    # Re-seed the random number generator
-    np.random.seed()
+    # define the random generator
+    noise_distr = stats.multivariate_normal(
+        mean=np.zeros(2),
+        cov=np.identity(2)
+    )
 
     # generate data
     sampled_data = x_true + noise_distr.rvs(num_samp)

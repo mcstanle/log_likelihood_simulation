@@ -17,13 +17,12 @@ from llr_solvers import exp1_llr, num_llr
 import multiprocessing as mp
 import numpy as np
 from quantile_estimators import estimate_quantile_at_point
-from scipy import stats
 from time import time
 import os
 
 
 def i_estimate_quantile_at_point(
-    i, x_true, llr, noise_distr, num_samp, q, c_max, tol
+    i, x_true, llr, num_samp, q, c_max, tol
 ):
     """
     Wrapper around estimate_quantile_at_point so that the index can be
@@ -33,7 +32,6 @@ def i_estimate_quantile_at_point(
         i           (int)         : index number of current grid point
         x_true      (np arr)      : true parameter value
         llr         (opt_llr obj) : llr object (see llr_solvers.py)
-        noise_distr (scipy distr) : multivariate error distribution
         num_samp    (int)         : number of data samples
         q           (float)       : quantile (0, 1)
         c_max       (float)       : maximum considered quantile
@@ -48,7 +46,6 @@ def i_estimate_quantile_at_point(
     quantile_est, sampled_data, llrs = estimate_quantile_at_point(
         x_true=x_true,
         llr=llr,
-        noise_distr=noise_distr,
         num_samp=num_samp,
         q=q,
         c_max=c_max,
@@ -59,7 +56,7 @@ def i_estimate_quantile_at_point(
 
 
 def parallel_quantile_est(
-    grid_flat, llr, noise_distr, num_samp, q, c_max, tol, num_cpu=None
+    grid_flat, llr, num_samp, q, c_max, tol, num_cpu=None
 ):
     """
     Given the flattened list of parameters over which to simulate, parallelize
@@ -73,7 +70,6 @@ def parallel_quantile_est(
     Parameters:
         grid_flat   (np arr)      : 2d parameter combos (g**2, d)
         llr         (opt_llr obj) : llr object (see llr_solvers.py)
-        noise_distr (scipy distr) : multivariate error distribution
         num_samp    (int)         : number of data samples (n)
         q           (float)       : quantile (0, 1)
         c_max       (float)       : maximum considered quantile
@@ -103,7 +99,7 @@ def parallel_quantile_est(
             i_estimate_quantile_at_point,
             args=(
                 i, grid_flat[i],
-                llr, noise_distr, num_samp, q, c_max, tol
+                llr, num_samp, q, c_max, tol
             ),
             callback=collect_data
         )
@@ -156,16 +152,12 @@ if __name__ == "__main__":
                 count += 1
 
     # define the parameters for the simulations
-    noise_distr = stats.multivariate_normal(
-        mean=np.zeros(2),
-        cov=np.identity(2)
-    )
     NUM_SAMP = 500000
     Q = 0.67
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = None
-    OUTPUT_FILE_NM = 'exp1_TEST_SMALL_RE_SEED.npz'
+    OUTPUT_FILE_NM = 'exp1_TEST_NOISE_DISTR.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
@@ -187,7 +179,6 @@ if __name__ == "__main__":
     quantile_ests, llrs = parallel_quantile_est(
         grid_flat=grid_flat,
         llr=llr,
-        noise_distr=noise_distr,
         num_samp=NUM_SAMP,
         q=Q,
         c_max=C_MAX,
