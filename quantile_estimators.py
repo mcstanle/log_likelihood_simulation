@@ -91,7 +91,7 @@ def estimate_quantile_at_point(
         llrs         (np arr) : log-likelihood ratios for each data draw
     """
     # Re-seed the random number generator
-    # np.random.seed()
+    np.random.seed()
 
     # generate data
     sampled_data = x_true + noise_distr.rvs(num_samp)

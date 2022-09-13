@@ -165,7 +165,7 @@ if __name__ == "__main__":
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = None
-    OUTPUT_FILE_NM = 'exp1_TEST_SMALL.npz'
+    OUTPUT_FILE_NM = 'exp1_TEST_SMALL_RE_SEED.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
