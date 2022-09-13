@@ -5,7 +5,7 @@ NOTE: assumes the [0,3] with 20 elements grid.
 
 Author   : Mike Stanley
 Created  : Sept 8 2022
-Last Mod : Sept 9 2022
+Last Mod : Sept 13 2022
 """
 from matplotlib import cm
 import matplotlib.pyplot as plt
@@ -100,7 +100,7 @@ def plot_probability_surface(data, prob, grid_size, grid_ub):
 if __name__ == "__main__":
 
     # read in data
-    DATA_PATH = './data/exp3.npz'
+    DATA_PATH = './data/exp4.npz'
     data = np.load(DATA_PATH)
 
     # plot the experiment settings
