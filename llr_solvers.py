@@ -20,8 +20,7 @@ import numpy as np
 
 class opt_llr:
     """ Class of log-likelihood ratio solvers """
-    def __init__(self, mu, h):
-        self.mu = mu
+    def __init__(self, h):
         self.h = h
 
     def compute(self, **kwargs):
@@ -33,18 +32,17 @@ class opt_llr:
 
 class exp1_llr(opt_llr):
     """ Child class for h = (0.5 0.5) -- explicit solution exists """
-    def __init__(self, mu, h, x_true):
-        super().__init__(mu, h)
-        self.x_true = x_true
+    def __init__(self):
         self.h = np.array([0.5, 0.5])  # overwrite to particular functional
-        self.mu = np.dot(self.h, self.x_true)  # overwrite with true val
 
-    def compute(self, y):
+    def compute(self, y, x_true):
         """
         h = (0.5 0.5)
 
         To make the solving easier, I use the S_i and Q_j terminology.
         """
+        true_mu = np.dot(self.h, x_true)
+
         # find solutions for regions
         quad_sols = {
             'Q1': 0,
@@ -53,9 +51,9 @@ class exp1_llr(opt_llr):
             'Q4': y[1] ** 2
         }
         S_sols = {
-            'S1': y[0] ** 2 + (y[1] - 2 * self.mu) ** 2,
-            'S2': np.linalg.norm(2 * (self.mu - np.dot(self.h, y)) * self.h) ** 2,
-            'S3': (y[0] - 2 * self.mu) ** 2 + y[1] ** 2
+            'S1': y[0] ** 2 + (y[1] - 2 * true_mu) ** 2,
+            'S2': np.linalg.norm(2 * (true_mu - np.dot(self.h, y)) * self.h) ** 2,
+            'S3': (y[0] - 2 * true_mu) ** 2 + y[1] ** 2
         }
 
         # determine quadrant of y
@@ -71,9 +69,9 @@ class exp1_llr(opt_llr):
             quad = 'Q4'
 
         # determine S region
-        if y[1] > y[0] + 2 * self.mu:
+        if y[1] > y[0] + 2 * true_mu:
             S_reg = 'S1'
-        elif y[1] < y[0] - 2 * self.mu:
+        elif y[1] < y[0] - 2 * true_mu:
             S_reg = 'S3'
         else:
             S_reg = 'S2'
@@ -83,22 +81,25 @@ class exp1_llr(opt_llr):
 
 class num_llr(opt_llr):
     """ cvxpy numerical solver """
-    def __init__(self, mu, h):
-        super().__init__(mu, h)
+    def __init__(self, h):
+        super().__init__(h)
 
-    def compute(self, y, verbose=False):
+    def compute(self, y, x_true, verbose=False):
         """
         Optimize the log-likelihood ratio
 
         Parameters:
-            mu      (float)  : level set of functional
             y       (np arr) : sampled data
+            x_true  (np arr) : true parameter value
             h       (np arr) : functional of interest
             verbose (bool)   : toggle cvxpy optimizer output
 
         Return:
             log-likelihood ratio for given data
         """
+        # find true functional
+        true_mu = np.dot(self.h, x_true)
+
         n = self.h.shape[0]
         x_null = cp.Variable(n)
         x_alt = cp.Variable(n)
@@ -107,7 +108,7 @@ class num_llr(opt_llr):
         prob_null = cp.Problem(
             objective=cp.Minimize(cp.sum_squares(y - x_null)),
             constraints=[
-                self.h @ x_null == self.mu,
+                self.h @ x_null == true_mu,
                 x_null >= 0
             ]
         )

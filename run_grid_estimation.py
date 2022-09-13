@@ -6,10 +6,14 @@ Parallelizable.
 NOTE: bisecting mode is when true parameter values are only taken on the y=x
 line. This setup matches the Tenorio (2008) example.
 
+NOTE: to make sure the right solver is being used, look at the SET SOLVER
+portion of the main code.
+
 Author   : Mike Stanley
 Created  : Sept 6 2022
-Last Mod : Sept 8 2022
+Last Mod : Sept 13 2022
 """
+from llr_solvers import exp1_llr, num_llr
 import multiprocessing as mp
 import numpy as np
 from quantile_estimators import estimate_quantile_at_point
@@ -19,7 +23,7 @@ import os
 
 
 def i_estimate_quantile_at_point(
-    i, x_true, h, noise_distr, num_samp, q, c_max, tol
+    i, x_true, llr, noise_distr, num_samp, q, c_max, tol
 ):
     """
     Wrapper around estimate_quantile_at_point so that the index can be
@@ -28,7 +32,7 @@ def i_estimate_quantile_at_point(
     Parameters:
         i           (int)         : index number of current grid point
         x_true      (np arr)      : true parameter value
-        h           (np arr)      : functional of interest
+        llr         (opt_llr obj) : llr object (see llr_solvers.py)
         noise_distr (scipy distr) : multivariate error distribution
         num_samp    (int)         : number of data samples
         q           (float)       : quantile (0, 1)
@@ -43,7 +47,7 @@ def i_estimate_quantile_at_point(
     """
     quantile_est, sampled_data, llrs = estimate_quantile_at_point(
         x_true=x_true,
-        h=h,
+        llr=llr,
         noise_distr=noise_distr,
         num_samp=num_samp,
         q=q,
@@ -55,7 +59,7 @@ def i_estimate_quantile_at_point(
 
 
 def parallel_quantile_est(
-    grid_flat, h, noise_distr, num_samp, q, c_max, tol, num_cpu=None
+    grid_flat, llr, noise_distr, num_samp, q, c_max, tol, num_cpu=None
 ):
     """
     Given the flattened list of parameters over which to simulate, parallelize
@@ -68,7 +72,7 @@ def parallel_quantile_est(
 
     Parameters:
         grid_flat   (np arr)      : 2d parameter combos (g**2, d)
-        h           (np arr)      : functional of interest (d)
+        llr         (opt_llr obj) : llr object (see llr_solvers.py)
         noise_distr (scipy distr) : multivariate error distribution
         num_samp    (int)         : number of data samples (n)
         q           (float)       : quantile (0, 1)
@@ -99,7 +103,7 @@ def parallel_quantile_est(
             i_estimate_quantile_at_point,
             args=(
                 i, grid_flat[i],
-                h, noise_distr, num_samp, q, c_max, tol
+                llr, noise_distr, num_samp, q, c_max, tol
             ),
             callback=collect_data
         )
@@ -119,6 +123,17 @@ if __name__ == "__main__":
 
     # bisecting mode -- see above for description
     BISECTING_MODE = False
+
+    # SET SOLVER
+    ANALYTICAL_SOLVER = True
+    h = np.array([0.5, 0.5])
+    if ANALYTICAL_SOLVER:
+        llr = exp1_llr()
+        assert np.array_equiv(exp1_llr.h, h)
+        print('Using analytical solver for h = %s' % str(h))
+    else:
+        llr = num_llr(h=h)
+        print('Using cvxpy solver')
 
     # define the grid
     NUM_GRID = 30
@@ -141,17 +156,16 @@ if __name__ == "__main__":
                 count += 1
 
     # define the parameters for the simulations
-    h = np.array([0.5, 0.5])
     noise_distr = stats.multivariate_normal(
         mean=np.zeros(2),
         cov=np.identity(2)
     )
-    NUM_SAMP = 10000
+    NUM_SAMP = 500000
     Q = 0.67
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = None
-    OUTPUT_FILE_NM = 'exp5.npz'
+    OUTPUT_FILE_NM = 'exp1_analytical.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
@@ -162,6 +176,7 @@ if __name__ == "__main__":
         Q, C_MAX, str(TOL)
     )
     exp_params_txt += "BISECTING_MODE = %s\n" % str(BISECTING_MODE)
+    exp_params_txt += "ANALYTICAL SOLVER = %s\n" % str(ANALYTICAL_SOLVER)
     if NUM_CPU:
         exp_params_txt += "NUM_CPU = %i" % NUM_CPU
     else:
@@ -171,7 +186,7 @@ if __name__ == "__main__":
     START = time()
     quantile_ests, sampled_datas, llrs = parallel_quantile_est(
         grid_flat=grid_flat,
-        h=h,
+        llr=llr,
         noise_distr=noise_distr,
         num_samp=NUM_SAMP,
         q=Q,

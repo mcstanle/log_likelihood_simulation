@@ -8,11 +8,9 @@ NOTE: relies on cdf_estimators.py
 
 Author   : Mike Stanley
 Created  : Sept 6 2022
-Last Mod : Sept 6 2022
+Last Mod : Sept 13 2022
 """
 from cdf_estimators import cdf_est_linear_interp, interp_function_wrap
-from llr_solvers import opt_llr
-import cvxpy as cp
 from functools import partial
 import numpy as np
 
@@ -71,7 +69,7 @@ def quantile_binary_search(q, cdf_func, c_max=20, tol=1e-4):
 
 
 def estimate_quantile_at_point(
-    x_true, h, noise_distr, num_samp, q, c_max, tol
+    x_true, llr, noise_distr, num_samp, q, c_max, tol
 ):
     """
     Takes a true parameter value and estimates q-quantile.
@@ -80,7 +78,7 @@ def estimate_quantile_at_point(
 
     Parameters:
         x_true      (np arr)      : true parameter value
-        h           (np arr)      : functional of interest
+        llr         (opt_llr obj) : llr object (see llr_solvers.py)
         noise_distr (scipy distr) : multivariate error distribution
         num_samp    (int)         : number of data samples
         q           (float)       : quantile (0, 1)
@@ -88,20 +86,17 @@ def estimate_quantile_at_point(
         tol         (float)       : search stopping criterion
 
     Returns:
-        quantile_est (float) : estimate of quantile
+        quantile_est (float)  : estimate of quantile
         sampled_data (np arr) : truth + noise
         llrs         (np arr) : log-likelihood ratios for each data draw
     """
     # generate data
     sampled_data = x_true + noise_distr.rvs(num_samp)
 
-    # compute true functional value
-    mu_true = np.dot(h, x_true)
-
     # compute llrs
     llrs = np.zeros(num_samp)
     for i in range(num_samp):
-        llrs[i] = opt_llr(mu=mu_true, y=sampled_data[i], h=h)
+        llrs[i] = llr(y=sampled_data[i], x_true=x_true)
 
     # define an approx CDF from the above sampled data
     cdf_approx, interp_xs = cdf_est_linear_interp(llrs)
