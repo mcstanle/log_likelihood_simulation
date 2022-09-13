@@ -11,6 +11,7 @@ Created  : Sept 6 2022
 Last Mod : Sept 6 2022
 """
 from cdf_estimators import cdf_est_linear_interp, interp_function_wrap
+from llr_solvers import opt_llr
 import cvxpy as cp
 from functools import partial
 import numpy as np
@@ -67,45 +68,6 @@ def quantile_binary_search(q, cdf_func, c_max=20, tol=1e-4):
         change = np.abs(c_i - c_i_1)
 
     return c_i
-
-
-def opt_llr(mu, y, h, verbose=False):
-    """
-    Optimize the log-likelihood ratio
-
-    Parameters:
-        mu      (float)  : level set of functional
-        y       (np arr) : sampled data
-        h       (np arr) : functional of interest
-        verbose (bool)   : toggle cvxpy optimizer output
-
-    Return:
-        log-likelihood ratio for given data
-    """
-    n = h.shape[0]
-    x_null = cp.Variable(n)
-    x_alt = cp.Variable(n)
-
-    # null/alt hypothesis optimization
-    prob_null = cp.Problem(
-        objective=cp.Minimize(cp.sum_squares(y - x_null)),
-        constraints=[
-            h @ x_null == mu,
-            x_null >= 0
-        ]
-    )
-    prob_alt = cp.Problem(
-        objective=cp.Minimize(cp.sum_squares(y - x_alt)),
-        constraints=[
-            x_alt >= 0
-        ]
-    )
-
-    # solve the optimizations
-    opt_null = prob_null.solve(verbose=verbose)
-    opt_alt = prob_alt.solve(verbose=verbose)
-
-    return opt_null - opt_alt
 
 
 def estimate_quantile_at_point(
