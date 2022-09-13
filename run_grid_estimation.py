@@ -114,7 +114,7 @@ def parallel_quantile_est(
     output_data.sort(key=lambda x: x[0])
     quantile_ests = np.array([_[1] for _ in output_data])  # (g**2,)
     # sampled_datas = np.array([_[2] for _ in output_data])  # (g**2, n, d)
-    llrs = np.array([_[3] for _ in output_data])           # (g**2, n)
+    llrs = np.array([_[2] for _ in output_data])           # (g**2, n)
 
     return quantile_ests, llrs
 
