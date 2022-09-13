@@ -42,7 +42,7 @@ def i_estimate_quantile_at_point(
     Returns:
         i            (int)    : index number of current grid point
         quantile_est (float)  : estimate of quantile
-        sampled_data (np arr) : truth + noise
+        # sampled_data (np arr) : truth + noise
         llrs         (np arr) : log-likelihood ratios for each data draw
     """
     quantile_est, sampled_data, llrs = estimate_quantile_at_point(
@@ -55,7 +55,7 @@ def i_estimate_quantile_at_point(
         tol=tol
     )
 
-    return i, quantile_est, sampled_data, llrs
+    return i, quantile_est, llrs
 
 
 def parallel_quantile_est(
@@ -82,7 +82,7 @@ def parallel_quantile_est(
 
     Returns:
         quantile_ests (np arr) : estimated quantiles for each grid point
-        sampled_datas (np arr) : all sampled data for each grid point est
+        # sampled_datas (np arr) : all sampled data for each grid point est
         llrs          (np arr) : log-lr for each data draw
     """
     if num_cpu:
@@ -113,10 +113,10 @@ def parallel_quantile_est(
 
     output_data.sort(key=lambda x: x[0])
     quantile_ests = np.array([_[1] for _ in output_data])  # (g**2,)
-    sampled_datas = np.array([_[2] for _ in output_data])  # (g**2, n, d)
+    # sampled_datas = np.array([_[2] for _ in output_data])  # (g**2, n, d)
     llrs = np.array([_[3] for _ in output_data])           # (g**2, n)
 
-    return quantile_ests, sampled_datas, llrs
+    return quantile_ests, llrs
 
 
 if __name__ == "__main__":
@@ -184,7 +184,7 @@ if __name__ == "__main__":
 
     # estimate quantiles
     START = time()
-    quantile_ests, sampled_datas, llrs = parallel_quantile_est(
+    quantile_ests, llrs = parallel_quantile_est(
         grid_flat=grid_flat,
         llr=llr,
         noise_distr=noise_distr,
@@ -211,6 +211,6 @@ if __name__ == "__main__":
         grid_flat=grid_flat,
         exp_params_txt=exp_params_txt,
         quantile_ests=quantile_ests,
-        sampled_datas=sampled_datas,
+        # sampled_datas=sampled_datas,
         llrs=llrs
     )
