@@ -100,7 +100,7 @@ def plot_probability_surface(data, prob, grid_size, grid_ub):
 if __name__ == "__main__":
 
     # read in data
-    DATA_PATH = './data/exp1_analytical.npz'
+    DATA_PATH = './data/exp5.npz'
     data = np.load(DATA_PATH)
 
     # plot the experiment settings

@@ -11,7 +11,7 @@ portion of the main code.
 
 Author   : Mike Stanley
 Created  : Sept 6 2022
-Last Mod : Sept 13 2022
+Last Mod : Sept 19 2022
 """
 from llr_solvers import exp1_llr, num_llr
 import multiprocessing as mp
@@ -89,12 +89,13 @@ def parallel_quantile_est(
     print('Number of available CPUs: %i' % mp.cpu_count())
 
     # storage for run_pipeline() output
-    output_data = []
+    SUM_GRID = grid_flat.shape[0]
+    output_data = [None] * SUM_GRID
 
     def collect_data(data):
         output_data.append(data)
 
-    for i in range(grid_flat.shape[0]):
+    for i in range(SUM_GRID):
         pool.apply_async(
             i_estimate_quantile_at_point,
             args=(
@@ -108,11 +109,9 @@ def parallel_quantile_est(
     pool.join()
 
     output_data.sort(key=lambda x: x[0])
-    # quantile_ests = np.array([_[1] for _ in output_data])  # (g**2,)
-    quantile_ests = [_[1] for _ in output_data]  # (g**2,)
+    quantile_ests = np.array([_[1] for _ in output_data])  # (g**2,)
     # sampled_datas = np.array([_[2] for _ in output_data])  # (g**2, n, d)
-    # llrs = np.array([_[2] for _ in output_data])           # (g**2, n)
-    llrs = [_[2] for _ in output_data]           # (g**2, n)
+    llrs = np.array([_[2] for _ in output_data])           # (g**2, n)
 
     return quantile_ests, llrs
 
