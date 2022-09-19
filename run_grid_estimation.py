@@ -134,9 +134,9 @@ if __name__ == "__main__":
         print('Using cvxpy solver')
 
     # define the grid
-    NUM_GRID = 30
+    NUM_GRID = 20
     GRID_LB = 0
-    GRID_UB = 10
+    GRID_UB = 3
     x_1_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
     x_2_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
 
@@ -154,12 +154,12 @@ if __name__ == "__main__":
                 count += 1
 
     # define the parameters for the simulations
-    NUM_SAMP = 500000
+    NUM_SAMP = 10000
     Q = 0.67
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = None
-    OUTPUT_FILE_NM = 'exp1_analytical.npz'
+    OUTPUT_FILE_NM = 'exp1.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
@@ -203,7 +203,7 @@ if __name__ == "__main__":
         file=SAVE_PATH,
         grid_flat=grid_flat,
         exp_params_txt=exp_params_txt,
-        # quantile_ests=quantile_ests,
+        quantile_ests=quantile_ests,
         # sampled_datas=sampled_datas,
         llrs=llrs
     )
