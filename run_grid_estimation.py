@@ -154,7 +154,7 @@ if __name__ == "__main__":
                 count += 1
 
     # define the parameters for the simulations
-    NUM_SAMP = 10000
+    NUM_SAMP = 100000
     Q = 0.67
     C_MAX = 20
     TOL = 1e-4
