@@ -134,8 +134,8 @@ if __name__ == "__main__":
         print('Using cvxpy solver')
 
     # define the grid
-    NUM_GRID = 10
-    GRID_LB = 7
+    NUM_GRID = 30
+    GRID_LB = 0
     GRID_UB = 10
     x_1_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
     x_2_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
@@ -156,12 +156,12 @@ if __name__ == "__main__":
     print(grid_flat[:10, :])
 
     # define the parameters for the simulations
-    NUM_SAMP = 1000
+    NUM_SAMP = 500000
     Q = 0.67
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = None
-    OUTPUT_FILE_NM = 'exp1_TEST_NOISE_DISTR.npz'
+    OUTPUT_FILE_NM = 'exp1_analytical.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
