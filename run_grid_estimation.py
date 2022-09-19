@@ -93,7 +93,8 @@ def parallel_quantile_est(
     output_data = [None] * SUM_GRID
 
     def collect_data(data):
-        output_data.append(data)
+        idx = data[0]
+        output_data[idx] = data
 
     for i in range(SUM_GRID):
         pool.apply_async(
