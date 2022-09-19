@@ -153,8 +153,6 @@ if __name__ == "__main__":
 
                 count += 1
 
-    print(grid_flat[:10, :])
-
     # define the parameters for the simulations
     NUM_SAMP = 500000
     Q = 0.67
