@@ -123,8 +123,8 @@ if __name__ == "__main__":
     BISECTING_MODE = False
 
     # SET SOLVER
-    ANALYTICAL_SOLVER = True
-    h = np.array([0.5, 0.5])
+    ANALYTICAL_SOLVER = False
+    h = np.array([0.25, 0.75])
     if ANALYTICAL_SOLVER:
         llr = exp1_llr()
         assert np.array_equiv(llr.h, h)
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = None
-    OUTPUT_FILE_NM = 'exp1.npz'
+    OUTPUT_FILE_NM = 'exp2.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
