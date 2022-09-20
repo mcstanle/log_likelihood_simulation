@@ -10,3 +10,4 @@ The following experiments are performed.
 | exp3.npz  | 20       | 0       | 3       | (1 -1)      | 100k              | 0.67 | False          | True              | 12            |
 | exp4.npz  | 20       | 0       | 3       | (1 -1)      | 10k               | 0.67 | True           | False             | 8             |
 | exp5.npz  | 30       | 0       | 10      | (0.5 0.5)   | 10k               | 0.67 | False          | False             | 12            |
+| exp6.npz  | 20       | 0       | 0.25    | (0.5 0.5)   | 100k              | 0.67 | False          | True              | 12            |

@@ -124,13 +124,14 @@ if __name__ == "__main__":
 
     # SET SOLVER
     ANALYTICAL_SOLVER = True
+    h = np.array([0.5, 0.5])  # exp1
     # h = np.array([0.25, 0.75])  # exp2
-    h = np.array([1, -1])  # exp3
+    # h = np.array([1, -1])  # exp3
     if ANALYTICAL_SOLVER:
 
         # select the right analytical solver!
-        # llr = exp1_llr()
-        llr = exp3_llr()
+        llr = exp1_llr()
+        # llr = exp3_llr()
         assert np.array_equiv(llr.h, h)
         print('Using analytical solver for h = %s' % str(h))
     else:
@@ -140,7 +141,7 @@ if __name__ == "__main__":
     # define the grid
     NUM_GRID = 20
     GRID_LB = 0
-    GRID_UB = 3
+    GRID_UB = 0.25
     x_1_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
     x_2_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
 
@@ -163,7 +164,7 @@ if __name__ == "__main__":
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = None
-    OUTPUT_FILE_NM = 'exp3.npz'
+    OUTPUT_FILE_NM = 'exp1_point25.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
