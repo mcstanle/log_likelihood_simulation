@@ -12,7 +12,7 @@ convex cone.
 
 Author   : Mike Stanley
 Created  : 11 Sept 2022
-Last Mod : 13 Sept 2022
+Last Mod : 20 Sept 2022
 """
 import cvxpy as cp
 import numpy as np
@@ -75,6 +75,59 @@ class exp1_llr(opt_llr):
             S_reg = 'S3'
         else:
             S_reg = 'S2'
+
+        return S_sols[S_reg] - quad_sols[quad]
+
+
+class exp3_llr(opt_llr):
+    """
+    Child class for h = (1 -1) -- explicit solution exists
+
+    NOTE: This is the Tenorio counter example
+    """
+    def __init__(self):
+        self.h = np.array([1, -1])  # overwrite to particular functional
+
+    def compute(self, y, x_true):
+        """
+        h = (1 -1)
+
+        To make the solving easier, I use the S_i and Q_j terminology.
+        """
+        true_mu = np.dot(self.h, x_true)
+
+        # find solutions for regions
+        quad_sols = {
+            'Q1': 0,
+            'Q2': y[0] ** 2,
+            'Q3': np.dot(y, y),
+            'Q4': y[1] ** 2
+        }
+        S_sols = {
+            'S1': 0.5 * (y[0] - y[1]) ** 2,
+            'S2': np.dot(y, y),
+            'S3': 0.5 * (y[0] - y[1]) ** 2
+        }
+
+        # determine quadrant of y
+        y_1_nn = y[0] >= 0
+        y_2_nn = y[1] >= 0
+        if y_1_nn and y_2_nn:
+            quad = 'Q1'
+        elif not y_1_nn and y_2_nn:
+            quad = 'Q2'
+        elif not y_1_nn and not y_2_nn:
+            quad = 'Q3'
+        else:
+            quad = 'Q4'
+
+        # determine S region
+        if y[1] < -y[0]:
+            S_reg = 'S2'
+        elif y[1] > y[0]:
+            S_reg = 'S1'
+        else:
+            S_reg = 'S3'
 
         return S_sols[S_reg] - quad_sols[quad]
 

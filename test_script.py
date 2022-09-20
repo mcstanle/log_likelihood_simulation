@@ -7,7 +7,8 @@ Last Mod : Sept 19 2022
 """
 import numpy as np
 from run_grid_estimation import i_estimate_quantile_at_point
-from llr_solvers import exp1_llr
+from llr_solvers import exp1_llr, exp3_llr, num_llr
+from scipy import stats
 
 
 def test_i_estimate_quantile_at_point():
@@ -32,3 +33,31 @@ def test_i_estimate_quantile_at_point():
     assert isinstance(i, int)
     assert isinstance(quantile_est, float)
     assert isinstance(llrs, np.ndarray)
+
+
+def test_exp3_llr(tol=1e-6):
+    """
+    Test to ensure analytical solution matches numerical solution for Tenorio
+    counter example
+
+    tol gauges how different the two solutions are.
+    """
+    h = np.array([1, -1])
+    x_true = np.array([1, 1])
+    cvx_llr = num_llr(h=h)
+    analytical_llr = exp3_llr()
+
+    # generate some data
+    NUM_DATA = 100
+    data = x_true + \
+        stats.multivariate_normal(np.zeros(2), np.identity(2)).rvs(NUM_DATA)
+
+    cvx_sols = np.zeros(NUM_DATA)
+    analytic_sols = np.zeros(NUM_DATA)
+
+    for i in range(NUM_DATA):
+        cvx_sols[i] = cvx_llr.compute(y=data[i], x_true=x_true)
+        analytic_sols[i] = analytical_llr.compute(y=data[i], x_true=x_true)
+
+    # find the max difference to gauge similarity
+    assert np.abs(np.array(cvx_sols) - np.array(analytic_sols)).max() < tol

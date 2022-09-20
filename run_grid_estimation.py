@@ -11,9 +11,9 @@ portion of the main code.
 
 Author   : Mike Stanley
 Created  : Sept 6 2022
-Last Mod : Sept 19 2022
+Last Mod : Sept 20 2022
 """
-from llr_solvers import exp1_llr, num_llr
+from llr_solvers import exp1_llr, exp3_llr, num_llr
 import multiprocessing as mp
 import numpy as np
 from quantile_estimators import estimate_quantile_at_point
@@ -123,10 +123,14 @@ if __name__ == "__main__":
     BISECTING_MODE = False
 
     # SET SOLVER
-    ANALYTICAL_SOLVER = False
-    h = np.array([0.25, 0.75])
+    ANALYTICAL_SOLVER = True
+    # h = np.array([0.25, 0.75])  # exp2
+    h = np.array([1, -1])  # exp3
     if ANALYTICAL_SOLVER:
-        llr = exp1_llr()
+
+        # select the right analytical solver!
+        # llr = exp1_llr()
+        llr = exp3_llr()
         assert np.array_equiv(llr.h, h)
         print('Using analytical solver for h = %s' % str(h))
     else:
@@ -159,7 +163,7 @@ if __name__ == "__main__":
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = None
-    OUTPUT_FILE_NM = 'exp2.npz'
+    OUTPUT_FILE_NM = 'exp3.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
