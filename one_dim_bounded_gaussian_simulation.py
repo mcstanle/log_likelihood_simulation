@@ -188,12 +188,12 @@ if __name__ == "__main__":
     # set file paths
     BASE_PATH = '/home/mcstanle/log_likelihood_simulation'
     SAVE_PATH = BASE_PATH + '/data/non_negative_gaussian'
-    SAVE_PATH += '/x_star_point25.npy'
+    SAVE_PATH += '/x_star_point00.npy'
 
     # sample data
-    x_star = 0.25
+    x_star = 0.0
     noise_level = 1
-    np.random.seed(2)
+    np.random.seed(1)
     N = 5000  # number of samples
     y = stats.norm(loc=x_star, scale=noise_level).rvs(N)
 
