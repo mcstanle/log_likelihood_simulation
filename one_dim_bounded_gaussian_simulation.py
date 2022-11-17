@@ -194,7 +194,7 @@ if __name__ == "__main__":
     x_star = 0.25
     noise_level = 1
     np.random.seed(2)
-    N = 100  # number of samples
+    N = 5000  # number of samples
     y = stats.norm(loc=x_star, scale=noise_level).rvs(N)
 
     # compute the intervals
