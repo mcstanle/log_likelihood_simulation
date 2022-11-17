@@ -188,6 +188,7 @@ if __name__ == "__main__":
     # set file paths
     BASE_PATH = '/home/mcstanle/log_likelihood_simulation'
     SAVE_PATH = BASE_PATH + '/data/non_negative_gaussian'
+    SAVE_PATH += '/x_star_point25.npy'
 
     # sample data
     x_star = 0.25
