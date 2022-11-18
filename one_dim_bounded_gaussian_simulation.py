@@ -23,7 +23,7 @@ def cdf_analy(mu, c):
         return stats.chi2(df=1).cdf(c)
     else:
         a = 0 if mu == 0. else stats.norm.cdf((-mu**2 - c)/(2 * mu))
-        return stats.norm.cdf(np.sqrt(c) - a)
+        return stats.norm.cdf(np.sqrt(c)) - a
 
 
 def quantile_binary_search(mu, c_max=20, alpha=0.05, tol=1e-8):
@@ -188,12 +188,12 @@ if __name__ == "__main__":
     # set file paths
     BASE_PATH = '/home/mcstanle/log_likelihood_simulation'
     SAVE_PATH = BASE_PATH + '/data/non_negative_gaussian'
-    SAVE_PATH += '/x_star_point00.npy'
+    SAVE_PATH += '/x_star_point25.npy'
 
     # sample data
-    x_star = 0.0
+    x_star = 0.25
     noise_level = 1
-    np.random.seed(1)
+    np.random.seed(2)
     N = 5000  # number of samples
     y = stats.norm(loc=x_star, scale=noise_level).rvs(N)
 
