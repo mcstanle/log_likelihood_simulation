@@ -143,7 +143,7 @@ def plot_expected_value_surface(data, prob, grid_size, grid_ub):
 if __name__ == "__main__":
 
     # read in data
-    DATA_PATH = './data/exp1.npz'
+    DATA_PATH = './data/exp7.npz'
     data = np.load(DATA_PATH)
 
     # plot the experiment settings
