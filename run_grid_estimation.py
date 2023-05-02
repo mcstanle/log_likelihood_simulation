@@ -11,7 +11,7 @@ portion of the main code.
 
 Author   : Mike Stanley
 Created  : Sept 6 2022
-Last Mod : Sept 20 2022
+Last Mod : May 2 2023
 """
 from llr_solvers import exp1_llr, exp3_llr, num_llr
 import multiprocessing as mp
@@ -140,9 +140,9 @@ if __name__ == "__main__":
         print('Using cvxpy solver')
 
     # define the grid
-    NUM_GRID = 20
+    NUM_GRID = 7
     GRID_LB = 0
-    GRID_UB = 3
+    GRID_UB = 1
     x_1_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
     x_2_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
 
