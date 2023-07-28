@@ -12,7 +12,7 @@ convex cone.
 
 Author   : Mike Stanley
 Created  : 11 Sept 2022
-Last Mod : 20 Sept 2022
+Last Mod : 28 July 2023
 """
 import cvxpy as cp
 import numpy as np
@@ -52,7 +52,9 @@ class exp1_llr(opt_llr):
         }
         S_sols = {
             'S1': y[0] ** 2 + (y[1] - 2 * true_mu) ** 2,
-            'S2': np.linalg.norm(2 * (true_mu - np.dot(self.h, y)) * self.h) ** 2,
+            'S2': np.linalg.norm(
+                2 * (true_mu - np.dot(self.h, y)) * self.h
+            ) ** 2,
             'S3': (y[0] - 2 * true_mu) ** 2 + y[1] ** 2
         }
 
@@ -94,42 +96,31 @@ class exp3_llr(opt_llr):
 
         To make the solving easier, I use the S_i and Q_j terminology.
         """
-        true_mu = np.dot(self.h, x_true)
+        mu = np.dot(self.h, x_true)
+        mu_pol = -1 if mu <= 0 else 1
+        if y[0] + y[1] >= mu_pol * mu:  # S_1
+            x_A = np.array([
+                0.5 * (y[0] + mu + y[1]),
+                0.5 * (y[0] + mu + y[1]) - mu
+            ])
+        else:  # S_2
+            if mu <= 0:
+                x_A = np.array([0, -mu])
+            elif mu > 0:
+                x_A = np.array([mu, 0])
+        opt_A = np.dot(y - x_A, y - x_A)
 
-        # find solutions for regions
-        quad_sols = {
-            'Q1': 0,
-            'Q2': y[0] ** 2,
-            'Q3': np.dot(y, y),
-            'Q4': y[1] ** 2
-        }
-        S_sols = {
-            'S1': 0.5 * (y[0] - y[1]) ** 2,
-            'S2': np.dot(y, y),
-            'S3': 0.5 * (y[0] - y[1]) ** 2
-        }
-
-        # determine quadrant of y
-        y_1_nn = y[0] >= 0
-        y_2_nn = y[1] >= 0
-        if y_1_nn and y_2_nn:
-            quad = 'Q1'
-        elif not y_1_nn and y_2_nn:
-            quad = 'Q2'
-        elif not y_1_nn and not y_2_nn:
-            quad = 'Q3'
+        # optimization B
+        if (y[0] >= 0) & (y[1] >= 0):
+            opt_B = 0
+        elif (y[0] >= 0) & (y[1] < 0):
+            opt_B = y[1] ** 2
+        elif (y[0] < 0) & (y[1] < 0):
+            opt_B = y[0] ** 2 + y[1] ** 2
         else:
-            quad = 'Q4'
+            opt_B = y[0] ** 2
 
-        # determine S region
-        if y[1] < -y[0]:
-            S_reg = 'S2'
-        elif y[1] > y[0]:
-            S_reg = 'S1'
-        else:
-            S_reg = 'S3'
-
-        return S_sols[S_reg] - quad_sols[quad]
+        return opt_A - opt_B
 
 
 class num_llr(opt_llr):

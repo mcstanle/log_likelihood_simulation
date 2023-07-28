@@ -12,4 +12,5 @@ The following experiments are performed.
 | exp5.npz  | 30       | 0       | 10      | (0.5 0.5)   | 10k               | 0.67 | False          | False             | 12            |       |
 | exp6.npz  | 20       | 0       | 0.25    | (0.5 0.5)   | 100k              | 0.67 | False          | True              | 12            | Saved as exp1_point25.npz      |
 | exp7.npz  | 20       | 0       | 3       | (1 -1)      | 50k               | 0.67 | False          | True              | 12            | None  |
-| exp8.npz  | 07       | 0       | 1       | (1 =1)      | 50k               | 0.95 | False          | False             | 12            | None  |
+| exp8.npz  | 07       | 0       | 1       | (1 -1)      | 50k               | 0.95 | False          | False             | 12            | None  |
+| exp9.npz  | 07       | 0       | 1       | (1 -1)      | 50k               | 0.95 | False          | True              | 12            | None  |

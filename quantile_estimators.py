@@ -70,7 +70,7 @@ def quantile_binary_search(q, cdf_func, c_max=20, tol=1e-4):
 
 
 def estimate_quantile_at_point(
-    x_true, llr, num_samp, q, c_max, tol
+    x_true, llr, num_samp, q, c_max, tol, seed
 ):
     """
     Takes a true parameter value and estimates q-quantile.
@@ -84,6 +84,7 @@ def estimate_quantile_at_point(
         q           (float)       : quantile (0, 1)
         c_max       (float)       : maximum considered quantile
         tol         (float)       : search stopping criterion
+        seed        (int)         : seed for the random number generation
 
     Returns:
         quantile_est (float)  : estimate of quantile
@@ -97,6 +98,7 @@ def estimate_quantile_at_point(
     )
 
     # generate data
+    np.random.seed(seed)
     sampled_data = x_true + noise_distr.rvs(num_samp)
 
     # compute llrs

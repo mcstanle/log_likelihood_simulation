@@ -11,9 +11,9 @@ portion of the main code.
 
 Author   : Mike Stanley
 Created  : Sept 6 2022
-Last Mod : May 2 2023
+Last Mod : July 29 2023
 """
-from llr_solvers import exp1_llr, exp3_llr, num_llr
+from llr_solvers import exp3_llr, num_llr  # exp1_llr
 import multiprocessing as mp
 import numpy as np
 from quantile_estimators import estimate_quantile_at_point
@@ -49,7 +49,8 @@ def i_estimate_quantile_at_point(
         num_samp=num_samp,
         q=q,
         c_max=c_max,
-        tol=tol
+        tol=tol,
+        seed=i
     )
 
     return i, quantile_est, llrs
@@ -123,16 +124,16 @@ if __name__ == "__main__":
     BISECTING_MODE = False
 
     # SET SOLVER
-    ANALYTICAL_SOLVER = False
+    ANALYTICAL_SOLVER = True
     h = np.array([1, -1])  # manually defined h for numerical solver
     # h = np.array([0.5, 0.5])  # exp1
     # h = np.array([0.25, 0.75])  # exp2
-    # h = np.array([1, -1])  # exp3
+    h = np.array([1, -1])  # exp3
     if ANALYTICAL_SOLVER:
 
         # select the right analytical solver!
-        llr = exp1_llr()
-        # llr = exp3_llr()
+        # llr = exp1_llr()
+        llr = exp3_llr()
         assert np.array_equiv(llr.h, h)
         print('Using analytical solver for h = %s' % str(h))
     else:
@@ -160,12 +161,12 @@ if __name__ == "__main__":
                 count += 1
 
     # define the parameters for the simulations
-    NUM_SAMP = 50000
+    NUM_SAMP = 5000
     Q = 0.95
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = None
-    OUTPUT_FILE_NM = 'exp8.npz'
+    OUTPUT_FILE_NM = 'exp9.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
