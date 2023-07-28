@@ -14,3 +14,4 @@ The following experiments are performed.
 | exp7.npz  | 20       | 0       | 3       | (1 -1)      | 50k               | 0.67 | False          | True              | 12            | None  |
 | exp8.npz  | 07       | 0       | 1       | (1 -1)      | 50k               | 0.95 | False          | False             | 12            | None  |
 | exp9.npz  | (40x20)  | (0, 0)  | (4, 2)  | (1 -1)      | 50k               | 0.95 | False          | True              | 12            | None  |
+| exp10.npz | (40x20)  | (0, 0)  | (4, 2)  | (1 -1)      | 50k               | 0.5  | False          | True              | 12            | None  |
