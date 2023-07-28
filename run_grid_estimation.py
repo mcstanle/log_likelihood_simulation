@@ -141,21 +141,24 @@ if __name__ == "__main__":
         print('Using cvxpy solver')
 
     # define the grid
-    NUM_GRID = 7
-    GRID_LB = 0
-    GRID_UB = 1
-    x_1_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
-    x_2_grid = np.linspace(GRID_LB, GRID_UB, num=NUM_GRID)
+    NUM_GRID_X1 = 40
+    NUM_GRID_X2 = 20
+    GRID_X1_LB = 0
+    GRID_X1_UB = 4
+    GRID_X2_LB = 0
+    GRID_X2_UB = 2
+    x_1_grid = np.linspace(GRID_X1_LB, GRID_X1_UB, num=NUM_GRID_X1)
+    x_2_grid = np.linspace(GRID_X2_LB, GRID_X2_UB, num=NUM_GRID_X2)
 
     if BISECTING_MODE:
-        grid_flat = np.zeros(shape=(NUM_GRID, 2))
-        for i in range(NUM_GRID):
+        grid_flat = np.zeros(shape=(NUM_GRID_X1, 2))
+        for i in range(NUM_GRID_X1):
             grid_flat[i, :] = [x_1_grid[i], x_1_grid[i]]
     else:
         count = 0
-        grid_flat = np.zeros(shape=(NUM_GRID ** 2, 2))
-        for i in range(NUM_GRID):
-            for j in range(NUM_GRID):
+        grid_flat = np.zeros(shape=(NUM_GRID_X1 * NUM_GRID_X2, 2))
+        for i in range(NUM_GRID_X1):
+            for j in range(NUM_GRID_X2):
                 grid_flat[count, :] = [x_1_grid[i], x_2_grid[j]]
 
                 count += 1
@@ -169,8 +172,14 @@ if __name__ == "__main__":
     OUTPUT_FILE_NM = 'exp9.npz'
 
     # constract text file with experiment parameters
-    exp_params_txt = "NUM_GRID = %i\n" % NUM_GRID
-    exp_params_txt += "GRID_LB = %i | GRID_UB = %i\n" % (GRID_LB, GRID_UB)
+    exp_params_txt = "NUM_GRID_X1 = %i\n" % NUM_GRID_X1
+    exp_params_txt += "NUM_GRID_X2 = %i\n" % NUM_GRID_X2
+    exp_params_txt += "GRID_X1_LB = %i | GRID_X1_UB = %i\n" % (
+        GRID_X1_LB, GRID_X1_UB
+    )
+    exp_params_txt += "GRID_X2_LB = %i | GRID_21_UB = %i\n" % (
+        GRID_X2_LB, GRID_X2_UB
+    )
     exp_params_txt += "h = %s\n" % str(h)
     exp_params_txt += "NUM_SAMP = %i\n" % NUM_SAMP
     exp_params_txt += "q = %.2f | c_max = %.2f | tol = %s\n" % (
