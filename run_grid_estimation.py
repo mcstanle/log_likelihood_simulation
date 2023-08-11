@@ -11,7 +11,7 @@ portion of the main code.
 
 Author   : Mike Stanley
 Created  : Sept 6 2022
-Last Mod : July 29 2023
+Last Mod : Aug 11 2023
 """
 from llr_solvers import exp3_llr, num_llr  # exp1_llr
 import multiprocessing as mp
@@ -165,11 +165,11 @@ if __name__ == "__main__":
 
     # define the parameters for the simulations
     NUM_SAMP = 50000
-    Q = 0.5
+    Q = 0.68
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = None
-    OUTPUT_FILE_NM = 'exp10.npz'
+    OUTPUT_FILE_NM = 'exp11.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID_X1 = %i\n" % NUM_GRID_X1
