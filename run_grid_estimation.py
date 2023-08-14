@@ -11,7 +11,7 @@ portion of the main code.
 
 Author   : Mike Stanley
 Created  : Sept 6 2022
-Last Mod : Aug 11 2023
+Last Mod : Aug 14 2023
 """
 from llr_solvers import exp3_llr, num_llr  # exp1_llr
 import multiprocessing as mp
@@ -144,9 +144,9 @@ if __name__ == "__main__":
     NUM_GRID_X1 = 40
     NUM_GRID_X2 = 20
     GRID_X1_LB = 0
-    GRID_X1_UB = 4
+    GRID_X1_UB = 3
     GRID_X2_LB = 0
-    GRID_X2_UB = 2
+    GRID_X2_UB = 5
     x_1_grid = np.linspace(GRID_X1_LB, GRID_X1_UB, num=NUM_GRID_X1)
     x_2_grid = np.linspace(GRID_X2_LB, GRID_X2_UB, num=NUM_GRID_X2)
 
@@ -169,7 +169,7 @@ if __name__ == "__main__":
     C_MAX = 20
     TOL = 1e-4
     NUM_CPU = None
-    OUTPUT_FILE_NM = 'exp11.npz'
+    OUTPUT_FILE_NM = 'exp12.npz'
 
     # constract text file with experiment parameters
     exp_params_txt = "NUM_GRID_X1 = %i\n" % NUM_GRID_X1
